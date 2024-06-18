@@ -9,19 +9,19 @@ import Collapse from "@mui/material/Collapse";
 import { useState } from "react";
 
 const MyTableRow = (props) => {
+    /**
+     * This component gets a value out of the rows array and the whole columns array
+     */
     const { row, cols, isExtended } = props;
     const [open, setOpen] = useState(false);
-    const maxLength = 10;
-
-    const shortenCloseNotes = (closedNote, maxLength) => {
-        if (closedNote.length > maxLength) {
-            return closedNote.substring(0, maxLength) + "...";
-        } else {
-            return closedNote;
-        }
-    };
+    
+    
 
     return (
+        /**
+         * returns the HTML of the table row, it takes the row it got from the props 
+         *   and gets the value of the correct column by using the column key
+         */
         <>
             <TableRow>
                 {isExtended && (
@@ -37,19 +37,8 @@ const MyTableRow = (props) => {
                         )}
                     </IconButton>
                 )}
-
-                {/* <TableCell>{row.number}</TableCell>
-                <TableCell>{row.opened_at}</TableCell>
-                <TableCell>{row.sys_id}</TableCell>
-                <TableCell>{row.description.id}</TableCell>
-                <TableCell>{row.description.project}</TableCell>
-                <TableCell>{row.description.message}</TableCell>
-                <TableCell>
-                    {shortenCloseNotes(row.closed_notes, maxLength)}
-                </TableCell> */}
-                {console.log(cols)}
-                {cols.map((col) => (
-                    <TableCell>{row[col.key]}</TableCell>
+                {cols.map((col,index) => (
+                    <TableCell key={col.key+index}>{row[col.key]}</TableCell>
                 ))}
             </TableRow>
             {isExtended && (
@@ -60,16 +49,6 @@ const MyTableRow = (props) => {
                     >
                         <Collapse in={open} timeout="auto" unmountOnExit>
                             <Box sx={{ margin: 1 }}>
-                                {/* <Typography
-                                    variant="body1"
-                                    gutterBottom
-                                    component="div"
-                                >
-                                    
-                                    {row.extended_message}
-                                    
-                                </Typography> */}
-
                                 <Typography
                                     component="div"
                                     dangerouslySetInnerHTML={{
