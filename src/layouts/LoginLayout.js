@@ -1,20 +1,24 @@
-import { Button, Card, CardActions, Box } from "@mui/material";
+import { Button, Card, CardActions, Box, Typography } from "@mui/material";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { setToken } from "../store/slices/loginSlice";
 import Cookies from "js-cookie";
+import { useState } from "react";
 
 const LoginLayout = () => {
+    const [error, setError] = useState(undefined);
     const dispatch = useDispatch();
 
     const handleLogin = async () => {
+        debugger;
         // replace with SSO logic
         try {
+            debugger;
             const url = process.env.REACT_APP_BACKEND;
-            const response = await axios.post(
-                `${url}/auth/getToken`,
-                {"username":"myname","password":"test"}
-            );
+            const response = await axios.post(`${url}/auth/getToken`, {
+                username: "myname",
+                password: "test",
+            });
             // const REACT_APP_BACKEND =
             //     "http://localhost:30005";
             // const response = await axios.post(
@@ -23,19 +27,26 @@ const LoginLayout = () => {
             // );
             const token = response.data.token;
             const name = response.data.name;
-            dispatch(setToken({token,name}));
-            //sessionStorage.setItem("token",token);
-            Cookies.set("jwt", token, {
-                secure: true,
-                sameSite: "strict",
-                expires: 7,
-            });
-            Cookies.set("name", name, {
-                secure: true,
-                sameSite: "strict",
-                expires: 7,
-            });
+
+            if (token && name) {
+                setError(undefined);
+                dispatch(setToken({ token, name }));
+                //sessionStorage.setItem("token",token);
+                Cookies.set("jwt", token, {
+                    secure: true,
+                    sameSite: "strict",
+                    expires: 7,
+                });
+                Cookies.set("name", name, {
+                    secure: true,
+                    sameSite: "strict",
+                    expires: 7,
+                });
+            } else {
+                setError("Problem occured with signing in");
+            }
         } catch (error) {
+            setError("Problem occured with signing in");
             console.error(error);
         }
     };
@@ -54,6 +65,7 @@ const LoginLayout = () => {
                 sx={{
                     minWidth: 275,
                     display: "flex",
+                    flexDirection: "column",
                     justifyContent: "center",
                     alignItems: "center",
                     height: "30vh",
@@ -66,6 +78,11 @@ const LoginLayout = () => {
                         Log in{" "}
                     </Button>
                 </CardActions>
+                {error && (
+                    <Typography variant="body2" color="error">
+                        {error}
+                    </Typography>
+                )}
             </Card>
         </Box>
     );

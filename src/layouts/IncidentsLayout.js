@@ -39,7 +39,7 @@ const IncidentsLayout = () => {
                      
                     </TabList>
                     </Box>
-                    <Typography sx={{ minWidth: 100 }}>{name}</Typography>
+                    <Typography sx={{ minWidth: 100,paddingRight: 2 }}>{name} שלום</Typography>
                     </Stack>
                 </Box>
 
